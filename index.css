@@ -1,0 +1,215 @@
+/* Base styles for animated elements */
+.flow-path,
+.label-group .label {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.flow-path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+}
+
+/* Animation definitions */
+@keyframes draw-path {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Applying animations when 'animating' class is active */
+.animating .flow-path,
+.animating .label-group .label {
+  opacity: 1;
+}
+
+/* --- Animation Sequence --- */
+
+/* 1. Venous blood enters */
+.animating #venous-in {
+  animation: draw-path 2s linear forwards;
+}
+.animating .label.venous-in {
+  animation: fade-in 0.5s linear 1s forwards;
+}
+
+/* 2. Blood flow splits into three paths */
+.animating #gas-exchange-deox,
+.animating #partial-shunt-deox {
+  animation: draw-path 2s linear 2s forwards;
+}
+.animating #full-shunt {
+  animation: draw-path 4s linear 2s forwards;
+}
+
+/* 3. Labels for split paths appear */
+.animating .label.gas-exchange,
+.animating .label.partial-shunt,
+.animating .label.full-shunt {
+  animation: fade-in 0.5s linear 3s forwards;
+}
+
+/* 4. Gas exchange occurs */
+.animating #gas-exchange-ox,
+.animating #partial-shunt-ox {
+  animation: draw-path 3s linear 4s forwards;
+}
+
+/* 5. Oxygenated labels appear */
+.animating .label.oxygenated,
+.animating .label.partially-oxygenated {
+  animation: fade-in 0.5s linear 5.5s forwards;
+}
+
+/* 6. Shunted and oxygenated blood mix, arterial blood flows out */
+.animating #arterial-out {
+  animation: draw-path 2s linear 7s forwards;
+}
+
+/* 7. Final arterial labels appear */
+.animating .label.mixed {
+  animation: fade-in 0.5s linear 8s forwards;
+}
+
+
+/* --- SVG Interactivity --- */
+#animated-flow > path,
+.label-group > g,
+.label-group > path,
+.label-group > text {
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.highlight-path {
+  stroke-width: 12;
+  filter: drop-shadow(0 0 4px #a78bfa); /* purple-400 */
+}
+
+.highlight-label {
+  opacity: 1 !important; /* Override animation and dimmed opacity */
+}
+
+.highlight-label rect {
+  stroke-width: 3 !important;
+  stroke: #8b5cf6 !important; /* purple-500 */
+}
+
+.highlight-label text {
+  font-weight: bold;
+}
+
+/* Dimming style for non-hovered elements */
+.dimmed {
+  opacity: 0.3 !important;
+}
+
+/* Dim static background when interacting */
+.is-interacting #static-diagram {
+  opacity: 0.4;
+  transition: opacity 0.2s ease-in-out;
+}
+
+
+/* --- O2 Balance Flowchart Animation --- */
+.flow-element,
+.connector {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.connector {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+}
+
+@keyframes draw-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animating-flowchart .flow-element {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+.animating-flowchart .connector {
+  animation: draw-line 0.8s ease-out forwards, fade-in 0.2s ease-out forwards;
+}
+
+/* --- O2 Balance Models --- */
+.ards-model-active .flow-element rect,
+.ards-model-active .flow-element text,
+.ards-model-active g,
+.shock-model-active .flow-element rect,
+.shock-model-active .flow-element text,
+.shock-model-active g,
+.intervention-model-active .flow-element rect,
+.intervention-model-active .flow-element text,
+.intervention-model-active g,
+.acidosis-model-active .flow-element rect,
+.acidosis-model-active .flow-element text,
+.acidosis-model-active g,
+.ecmo-model-active .flow-element rect,
+.ecmo-model-active .flow-element text,
+.ecmo-model-active g {
+  transition: all 0.5s ease-in-out;
+}
+
+.node-critical rect {
+  stroke: #dc2626; /* red-600 */
+  fill: #fef2f2; /* red-50 */
+}
+.node-critical text {
+  fill: #991b1b; /* red-900 */
+}
+.node-critical text:first-of-type {
+  font-weight: bold;
+}
+
+.node-warning rect {
+  stroke: #ca8a04; /* yellow-500 */
+  fill: #fefce8; /* yellow-50 */
+}
+.node-warning text {
+  fill: #713f12; /* yellow-900 */
+}
+.node-warning text:first-of-type {
+  font-weight: bold;
+}
+
+.node-severe rect {
+  stroke: #2563eb; /* blue-600 */
+  fill: #eff6ff; /* blue-50 */
+}
+.node-severe text {
+  fill: #1e3a8a; /* blue-900 */
+}
+.node-severe text:first-of-type {
+  font-weight: bold;
+}
+
+.node-improving rect {
+  stroke: #15803d; /* green-700 */
+  fill: #16a34a; /* green-600 */
+}
+.node-improving text {
+  fill: #ffffff;
+}
+.node-improving text:first-of-type {
+  font-weight: bold;
+}
+
+.ecmo-model-active .lung-pathway {
+  opacity: 0.2;
+  transition: opacity 0.5s ease-in-out;
+}
+.ecmo-model-active .lung-pathway .node-improving {
+  opacity: 1;
+}
